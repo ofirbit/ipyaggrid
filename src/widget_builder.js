@@ -164,11 +164,29 @@ const buildAgGrid = (view, gridData, gridOptions_str, div, sheet, dropdownMulti 
         });
     }
 
+    function getAllFilters() {
+        const filterModels = {};
+        const filtersList = Object.keys(gridOptions.api.filterManager.allFilters);
+        for (const filterName of filtersList) {
+            filterModels[filterName] = gridOptions.api.getFilterInstance(filterName).getModel();
+        }
+        return filterModels;
+    }
+    function applyFilters(filterModels) {
+        for (const [filterName, model] of Object.entries(filterModels)) {
+            gridOptions.api.getFilterInstance(filterName).setModel(model);
+        }
+        gridOptions.api.onFilterChanged();
+    }
+
     // listen to _grid_data_down
     view.model.on('change:_grid_data_down', () => {
+        const savedFilterModels = getAllFilters();
+        gridOptions.api.setFilterModel(null);
         gridOptions.api.setRowData(view.model.get('_grid_data_down'));
+        applyFilters(savedFilterModels);
         if (view.model.get('sync_grid')) {
-            exportFunc.exportGrid(gridOptions, view);
+            _widget_export__WEBPACK_IMPORTED_MODULE_4__["exportFunc"].exportGrid(gridOptions, view);
         }
     });
 
