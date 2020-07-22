@@ -209,8 +209,8 @@ exportFunc.getMaxAggregation = function(options) {
  * @param {WidgetView} view
  * @param {Int} level
  */
-exportFunc.exportGrid = function(options, view, level = 0) {
-    const processed = getProcessedNodes(options);
+exportFunc.exportGrid = function(options, view, level = 0, filtered = false) {
+    const processed = getProcessedNodes(options, filtered);
     const nodes = processed.data;
     const res = recExportGrid(level, [], [], nodes, processed.values);
     const toUp = {
@@ -218,6 +218,7 @@ exportFunc.exportGrid = function(options, view, level = 0) {
             data: res.data,
             index_rows: { names: res.names, values: res.values },
             index_columns: res.columns,
+            isFilteredData: filtered
         },
     };
     console.log(toUp);
@@ -225,21 +226,37 @@ exportFunc.exportGrid = function(options, view, level = 0) {
     view.touch();
 };
 
-function getProcessedNodes(options) {
+function getProcessedNodes(options, filtered = false) {
     /**
      * Removes all the unwanted data (Apis, Extra Data...) from the required nodes.
      */
     const columns = findCorrectColumns(options.columnApi.getAllDisplayedColumns(), options);
     const res = [];
     const nodes = [];
-    options.api.forEachNode(node => {
+    if (filtered) {
+      options.api.forEachNodeAfterFilterAndSort(node => {
         nodes.push(node);
-    });
-    options.api.forEachNode(node => {
-        if (node.parent.id === 'ROOT_NODE_ID') {
-            res.push(cleanNode(node, columns.columns_keys));
-        }
-    });
+      });
+    } else {
+      options.api.forEachNode(node => {
+        nodes.push(node);
+      });
+    }
+    
+    if (filtered) {
+      options.api.forEachNodeAfterFilterAndSort(node => {
+          if (node.parent.id === 'ROOT_NODE_ID') {
+              res.push(cleanNode(node, columns.columns_keys));
+          }
+      });
+    } else {
+      options.api.forEachNode(node => {
+          if (node.parent.id === 'ROOT_NODE_ID') {
+              res.push(cleanNode(node, columns.columns_keys));
+          }
+      });
+    }
+
     return { data: res, values: columns.columns_headers };
 }
 
