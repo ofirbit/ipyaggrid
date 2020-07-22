@@ -134,7 +134,7 @@ exportFunc.exportRowsOfRange = (options, view) => {
 
 function getCol(col, options) {
     const data = [];
-    options.api.forEachNodeAfterFilterAndSort(row => {
+    options.api.forEachNode(row => {
         data.push(row.data[col.colDef.field]);
     });
     return data;
@@ -151,7 +151,7 @@ exportFunc.exportColumns = (options, view) => {
     const cols = findCorrectColumns(rangeSelection.columns, options);
     const rows = [];
 
-    options.api.forEachNodeAfterFilterAndSort(node => rows.push(node));
+    options.api.forEachNode(node => rows.push(node));
 
     const { data: nodes, values: columns } = getProcessedSelectedRows(options, rows, cols);
     const data = [];
@@ -232,10 +232,10 @@ function getProcessedNodes(options) {
     const columns = findCorrectColumns(options.columnApi.getAllDisplayedColumns(), options);
     const res = [];
     const nodes = [];
-    options.api.forEachNodeAfterFilterAndSort(node => {
+    options.api.forEachNode(node => {
         nodes.push(node);
     });
-    options.api.forEachNodeAfterFilterAndSort(node => {
+    options.api.forEachNode(node => {
         if (node.parent.id === 'ROOT_NODE_ID') {
             res.push(cleanNode(node, columns.columns_keys));
         }
