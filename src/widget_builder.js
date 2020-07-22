@@ -162,6 +162,10 @@ const buildAgGrid = (view, gridData, gridOptions_str, div, sheet, dropdownMulti 
             // console.log(params);
             exportFunc.exportGrid(gridOptions, view);
         });
+        gridOptions.api.addEventListener('filterChanged', params => {
+            // console.log(params);
+            exportFunc.exportGrid(gridOptions, view);
+        });
     }
 
     function getAllFilters() {
