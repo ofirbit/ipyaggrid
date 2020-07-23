@@ -230,7 +230,7 @@ function getProcessedNodes(options, filtered = false) {
     /**
      * Removes all the unwanted data (Apis, Extra Data...) from the required nodes.
      */
-    const columns = findCorrectColumns(options.columnApi.getAllDisplayedColumns(), options);
+    const columns = findCorrectColumns(options.columnApi.getAllColumns(), options);
     const res = [];
     const nodes = [];
     if (filtered) {
