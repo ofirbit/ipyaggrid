@@ -208,19 +208,38 @@ exportFunc.getMaxAggregation = function(options) {
  * @param {Object} options
  * @param {WidgetView} view
  * @param {Int} level
+ * @param {Boolean} isFilterChange
+ * @param {Boolean} isSelectionChange
  */
-exportFunc.exportGrid = function(options, view, level = 0, filtered = false) {
-    const processed = getProcessedNodes(options, filtered);
-    const nodes = processed.data;
-    const res = recExportGrid(level, [], [], nodes, processed.values);
-    const toUp = {
-        grid: {
-            data: res.data,
-            index_rows: { names: res.names, values: res.values },
-            index_columns: res.columns,
-            isFilteredData: filtered
-        },
-    };
+exportFunc.exportGrid = function(options, view, level = 0, isFilteredData = false, isSelectionChange = false) {
+    let toUp;
+    if (isSelectionChange) {
+      const res = [];
+      const processed = options.api.getSelectedNodes();
+      processed.forEach(node => res.push(node.id));
+      toUp = {
+            grid: {
+                data: [],
+                index_rows: { names: [], values: res },
+                index_columns: [],
+                isSelectionChange: isSelectionChange
+            },
+        };
+    }
+    else {
+      const processed = getProcessedNodes(options, isFilteredData);
+      const nodes = processed.data;
+      const res = recExportGrid(level, [], [], nodes, processed.values);
+      toUp = {
+            grid: {
+                data: res.data,
+                index_rows: { names: res.names, values: res.values },
+                index_columns: res.columns,
+                isFilteredData: isFilteredData,
+                isSelectionChange: isSelectionChange
+            },
+        };
+    }
     console.log(toUp);
     view.model.set('_grid_data_up', toUp);
     view.touch();
