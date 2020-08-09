@@ -89,6 +89,7 @@ const setupInputs = (view, menu, sheet, gridOptions, dropdownMulti) => {
         if (input.name === 'Quick Filter') {
             setupQuickFilter(view, menu, sheet, input);
             setupResetFiltersButton(view, menu, sheet, input);
+            setupSortSelectionButton(view, menu, sheet, input);
         }
 
         // Setup Toggle Edit
@@ -252,6 +253,72 @@ const setupResetFiltersButton = (view, menu, sheet, input) => {
         document.getElementById(`quick-filter-${view._id}`).value = '';
     };
     resetFiltersButton.onclick = onResetFiltersClick;
+    sheet.insertRule(menu.button_div_css, sheet.cssRules.length);
+};
+
+/**
+ * Sort selection
+ * @param {WidgetView} view
+ * @param {Object} menu
+ * @param {StyleSheet} sheet
+ * @param {Object} input
+ */
+const setupSortSelectionButton = (view, menu, sheet, input) => {
+    const sortSelectionButton = document.createElement('button');
+    sortSelectionButton.id = `sort-selection-${view._id}`;
+    sortSelectionButton.innerText = 'Sort Selection';
+    sortSelectionButton.className = `jupyter-button flex-child-${input.name
+        .toLowerCase()
+        .replace(/\s/g, '-')}-${view._id}`;
+
+    menu.inputDivs.push(sortSelectionButton);
+
+    const onSortSelectionClick = () => {
+        const text = document.getElementById(`sort-selection-${view._id}`).innerText;
+        let nodes = [];
+        view.gridOptions.api.getSelectedNodes().forEach(node => nodes.push(node));
+        const count = nodes.length;
+        let processed = [];
+        if (text == 'Sort Selection') {
+            view.gridOptions.api.forEachNode(params => {
+                if(params.selected) {
+                    processed.unshift(params)
+                } else {
+                    processed.push(params)
+                }
+            });
+            document.getElementById(`sort-selection-${view._id}`).innerText = 'Reset Sort Selection';
+        } else {
+            processed = new Array(count);
+            view.gridOptions.api.forEachNode(params => {
+                processed.splice(params.id, 1, params);
+            });
+            document.getElementById(`sort-selection-${view._id}`).innerText = 'Sort Selection';
+        }
+        console.log(processed);
+        const res = exportFunc.recExportGrid(0, [], [], processed, []);
+        let columns = [];
+        if (res.data.length > 0) {
+            columns = Object.keys(res.data[0]);
+        }
+        let values = [];
+        res.values.forEach(item => {values.push([parseInt(item[0])])});
+        const toUp = {
+            grid: {
+                data: res.data,
+                index_rows: {
+                    names: res.names,
+                    values: values
+                },
+                index_columns: columns,
+                isSortSelection: true
+            },
+        };
+        view.model.set('_grid_data_up', toUp);
+        view.touch();
+    };
+
+    sortSelectionButton.onclick = onSortSelectionClick;
     sheet.insertRule(menu.button_div_css, sheet.cssRules.length);
 };
 

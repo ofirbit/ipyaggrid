@@ -416,4 +416,10 @@ function recExportGrid(i, names, value, nodes, columns) {
     return res;
 }
 
+
+exportFunc.recExportGrid = (i, names, value, nodes, columns) => {
+    const res = recExportGrid(i, names, value, nodes, columns);
+    return res;
+}
+
 export { exportFunc };
