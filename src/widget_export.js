@@ -211,7 +211,7 @@ exportFunc.getMaxAggregation = function(options) {
  * @param {Boolean} isFilterChange
  * @param {Boolean} isSelectionChange
  */
-exportFunc.exportGrid = function(options, view, level = 0, isFilteredData = false) {
+exportFunc.exportGrid = function(options, view, level = 0, isFilteredData = false, isCellValueChange = false) {
     let toUp;
     const processed = getProcessedNodes(options, isFilteredData);
     const nodes = processed.data;
@@ -221,7 +221,8 @@ exportFunc.exportGrid = function(options, view, level = 0, isFilteredData = fals
               data: res.data,
               index_rows: { names: res.names, values: res.values },
               index_columns: res.columns,
-              isFilteredData: isFilteredData
+              isFilteredData: isFilteredData,
+              isCellValueChange: isCellValueChange
           },
     };
     console.log(toUp);

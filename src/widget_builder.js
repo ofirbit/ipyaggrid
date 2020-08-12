@@ -160,11 +160,11 @@ const buildAgGrid = (view, gridData, gridOptions_str, div, sheet, dropdownMulti 
         window.gridOptions = gridOptions;
         gridOptions.api.addEventListener('cellValueChanged', params => {
             // console.log(params);
-            exportFunc.exportGrid(gridOptions, view);
+            exportFunc.exportGrid(gridOptions, view, 0, false, true);
         });
         gridOptions.api.addEventListener('filterChanged', params => {
             // console.log(params);
-            exportFunc.exportGrid(gridOptions, view, 0, true);
+            exportFunc.exportGrid(gridOptions, view, 0, true, false);
         });
     }
 
