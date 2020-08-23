@@ -252,7 +252,7 @@ const setupResetFiltersButton = (view, menu, sheet, input) => {
         document.getElementById(`quick-filter-${view._id}`).value = '';
     };
     resetFiltersButton.onclick = onResetFiltersClick;
-    sheet.insertRule(menu.button_div_css, sheet.cssRules.length);
+    menu.buttonDivs.push(resetFiltersButton);
 };
 
 /**
