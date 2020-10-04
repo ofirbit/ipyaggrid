@@ -211,7 +211,7 @@ const setupQuickFilter = (view, menu, sheet, input) => {
     const quickFilter = document.createElement('input');
     quickFilter.id = `quick-filter-${view._id}`;
     quickFilter.type = 'text';
-    quickFilter.placeholder = 'Filter...';
+    quickFilter.placeholder = 'Global Filter...';
     quickFilter.className = `widget-text flex-child-${input.name
         .toLowerCase()
         .replace(/\s/g, '-')}-${view._id}`;
