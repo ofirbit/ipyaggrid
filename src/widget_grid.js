@@ -114,6 +114,14 @@ const AgGridView = widgets.DOMWidgetView.extend({
             sheet.insertRule(`#widget-grid-${this._id} ${rule}`, 0);
         }); // Empty if Python css_rules not set
 
+        // Listen to changes on css_rules
+        this.model.on('change:css_rules_down', () => {
+            // Add custom CSS
+            this.model.get('css_rules_down').forEach(rule => {
+                sheet.insertRule(`#widget-grid-${this._id} ${rule}`, 0);
+            }); // Empty if Python css_rules not set
+        });
+
         // Get data
         const gridData = this.model.get('_grid_data_down');
 
