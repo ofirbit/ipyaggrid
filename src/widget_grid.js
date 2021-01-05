@@ -15,6 +15,7 @@ import * as builder from './widget_builder';
 import * as Utils from './widget_utils';
 import { version } from '../package.json';
 import {AutocompleteSelectCellEditor} from 'ag-grid-autocomplete-editor';
+import 'ag-grid-autocomplete-editor/main.css';
 
 // styles
 import './styles/ipywidgets/widgets.css';
