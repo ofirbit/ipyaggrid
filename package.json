@@ -42,7 +42,8 @@
         "ag-grid-enterprise": "21.1.0",
         "d3": "^5.9.7",
         "lodash": "^4.17.15",
-        "pako": "^1.0.10"
+        "pako": "^1.0.10",
+        "ag-grid-autocomplete-editor": "2.1.2"
     },
     "devDependencies": {
         "babel-core": "^6.26.3",
