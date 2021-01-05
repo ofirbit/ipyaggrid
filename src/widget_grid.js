@@ -141,4 +141,4 @@ const AgGridView = widgets.DOMWidgetView.extend({
     },
 });
 
-export { AgGridModel, AgGridView };
+export { AgGridModel, AgGridView ,AutocompleteSelectCellEditor };
