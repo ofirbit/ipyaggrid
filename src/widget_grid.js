@@ -14,6 +14,7 @@ import 'ag-grid-community/dist/styles/ag-theme-bootstrap.css';
 import * as builder from './widget_builder';
 import * as Utils from './widget_utils';
 import { version } from '../package.json';
+import {AutocompleteSelectCellEditor} from 'ag-grid-autocomplete-editor';
 
 // styles
 import './styles/ipywidgets/widgets.css';
