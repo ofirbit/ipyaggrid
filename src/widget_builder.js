@@ -3,6 +3,7 @@ import { LicenseManager } from 'ag-grid-enterprise';
 import * as moduled3 from 'd3';
 
 import * as Utils from './widget_utils';
+import * as Helpers from './helpers';
 import { exportFunc } from './widget_export';
 import { JSONfunc } from './widget_json';
 
@@ -226,6 +227,26 @@ const buildAgGrid = (view, gridData, gridOptions_str, div, sheet, dropdownMulti 
     if (view.model.get('sync_grid')) {
         exportFunc.exportGrid(gridOptions, view);
     }
+
+    // Listen to scroll property changes from python side
+    view.model.on('change:scroll', () => {
+        let scroll = view.model.get('scroll');
+        let gridBody = view.gridDiv.querySelector("div[ref=eBodyViewport]");
+        gridBody.scrollLeft = scroll[0]
+        gridBody.scrollTop = scroll[1]
+    });
+
+
+    const saveScroll = Helpers.debounce((left, top) => {
+        console.log(`bodyScroll(${left}, ${top})`);
+        view.model.set('scroll', [left, top]);
+        view.touch();
+    }, 300);
+
+    // Listen to scroll changes from the UI
+    gridOptions.api.addEventListener('bodyScroll', params => {
+        saveScroll(params.left, params.top);
+    });
 };
 
 /**

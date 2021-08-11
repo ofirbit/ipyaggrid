@@ -37,6 +37,8 @@ const AgGridModel = widgets.DOMWidgetModel.extend(
 
                 _id: 0,
 
+                scroll: [0, 0],
+
                 width: '',
                 height: '',
 
@@ -119,9 +121,9 @@ const AgGridView = widgets.DOMWidgetView.extend({
             // remove all previous css rules
             var i = sheet.rules.length
             while (i--) {
-                if (sheet.rules[i].selectorText.startsWith(`#widget-grid-${this._id}`)) { 
+                if (sheet.rules[i].selectorText.startsWith(`#widget-grid-${this._id}`)) {
                     sheet.removeRule(i);
-                } 
+                }
             }
             // Add custom CSS
             this.model.get('css_rules_down').forEach(rule => {
