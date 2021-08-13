@@ -236,16 +236,19 @@ const buildAgGrid = (view, gridData, gridOptions_str, div, sheet, dropdownMulti 
         gridBody.scrollTop = scroll[1]
     });
 
-
-    const saveScroll = Helpers.debounce((left, top) => {
-        console.log(`bodyScroll(${left}, ${top})`);
+    // We dont want to trigger export on every pixel scroll,
+    // but we still need to refresh the scroll value very often
+    // in order to be available almost immediatly on the backend side,
+    // so we use 300ms dealay for before triggering.
+    const scrollDebounceTimeout = 300;
+    const exportScroll = Helpers.debounce((left, top) => {
         view.model.set('scroll', [left, top]);
         view.touch();
-    }, 300);
+    }, scrollDebounceTimeout);
 
     // Listen to scroll changes from the UI
     gridOptions.api.addEventListener('bodyScroll', params => {
-        saveScroll(params.left, params.top);
+        exportScroll(params.left, params.top);
     });
 };
 
