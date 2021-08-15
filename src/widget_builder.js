@@ -3,6 +3,7 @@ import { LicenseManager } from 'ag-grid-enterprise';
 import * as moduled3 from 'd3';
 
 import * as Utils from './widget_utils';
+import * as Helpers from './helpers';
 import { exportFunc } from './widget_export';
 import { JSONfunc } from './widget_json';
 
@@ -226,6 +227,29 @@ const buildAgGrid = (view, gridData, gridOptions_str, div, sheet, dropdownMulti 
     if (view.model.get('sync_grid')) {
         exportFunc.exportGrid(gridOptions, view);
     }
+
+    // Listen to scroll property changes from python side
+    view.model.on('change:scroll', () => {
+        let scroll = view.model.get('scroll');
+        let gridBody = view.gridDiv.querySelector("div[ref=eBodyViewport]");
+        gridBody.scrollLeft = scroll[0]
+        gridBody.scrollTop = scroll[1]
+    });
+
+    // We dont want to trigger export on every pixel scroll,
+    // but we still need to refresh the scroll value very often
+    // in order to be available almost immediatly on the backend side,
+    // so we use 300ms dealay for before triggering.
+    const scrollDebounceTimeout = 300;
+    const exportScroll = Helpers.debounce((left, top) => {
+        view.model.set('scroll', [left, top]);
+        view.touch();
+    }, scrollDebounceTimeout);
+
+    // Listen to scroll changes from the UI
+    gridOptions.api.addEventListener('bodyScroll', params => {
+        exportScroll(params.left, params.top);
+    });
 };
 
 /**
