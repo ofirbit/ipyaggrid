@@ -228,13 +228,19 @@ const buildAgGrid = (view, gridData, gridOptions_str, div, sheet, dropdownMulti 
         exportFunc.exportGrid(gridOptions, view);
     }
 
-    // Listen to scroll property changes from python side
-    view.model.on('change:scroll', () => {
+    const setGridScroll = () => {
         let scroll = view.model.get('scroll');
         let gridBody = view.gridDiv.querySelector("div[ref=eBodyViewport]");
         gridBody.scrollLeft = scroll[0]
         gridBody.scrollTop = scroll[1]
-    });
+    }
+
+    // Listen to scroll property changes from python side
+    view.model.on('change:scroll', setGridScroll);
+
+    // Also set grid scroll immediatly after the grid content is set.
+    // Set timeout 0 in order to let the backend scroll value propagate after the data is set.
+    setTimeout(setGridScroll, 0);
 
     // We dont want to trigger export on every pixel scroll,
     // but we still need to refresh the scroll value very often
