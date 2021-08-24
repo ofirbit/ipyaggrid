@@ -191,7 +191,7 @@ const buildAgGrid = (view, gridData, gridOptions_str, div, sheet, dropdownMulti 
         gridOptions.api.setRowData(view.model.get('_grid_data_down'));
         applyFilters(savedFilterModels);
         if (view.model.get('sync_grid')) {
-            _widget_export__WEBPACK_IMPORTED_MODULE_4__["exportFunc"].exportGrid(gridOptions, view);
+            exportFunc.exportGrid(gridOptions, view);
         }
     });
 
