@@ -208,18 +208,22 @@ exportFunc.getMaxAggregation = function(options) {
  * @param {Object} options
  * @param {WidgetView} view
  * @param {Int} level
+ * @param {Boolean} isFilterChange
+ * @param {Boolean} isSelectionChange
  */
-exportFunc.exportGrid = function(options, view, level = 0, filtered = false) {
-    const processed = getProcessedNodes(options, filtered);
+exportFunc.exportGrid = function(options, view, level = 0, isFilteredData = false, isCellValueChange = false) {
+    let toUp;
+    const processed = getProcessedNodes(options, isFilteredData);
     const nodes = processed.data;
     const res = recExportGrid(level, [], [], nodes, processed.values);
-    const toUp = {
-        grid: {
-            data: res.data,
-            index_rows: { names: res.names, values: res.values },
-            index_columns: res.columns,
-            isFilteredData: filtered
-        },
+    toUp = {
+          grid: {
+              data: res.data,
+              index_rows: { names: res.names, values: res.values },
+              index_columns: res.columns,
+              isFilteredData: isFilteredData,
+              isCellValueChange: isCellValueChange
+          },
     };
     console.log(toUp);
     view.model.set('_grid_data_up', toUp);
@@ -230,7 +234,7 @@ function getProcessedNodes(options, filtered = false) {
     /**
      * Removes all the unwanted data (Apis, Extra Data...) from the required nodes.
      */
-    const columns = findCorrectColumns(options.columnApi.getAllDisplayedColumns(), options);
+    const columns = findCorrectColumns(options.columnApi.getAllColumns(), options);
     const res = [];
     const nodes = [];
     if (filtered) {

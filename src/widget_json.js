@@ -17,6 +17,9 @@ JSONfunc.parse = function(str, helpers) {
         if (valueCompact.substring(0, 8) === 'function') {
             r = eval(`(${value})`);
             return r;
+        } else if (valueCompact.substring(0, 9) === '(function') {
+            r = eval(value);
+            return r;
         } else if (valueCompact.substring(0, 8) === 'helpers.') {
             r = eval(value);
             return r;

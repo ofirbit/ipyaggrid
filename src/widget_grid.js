@@ -37,6 +37,8 @@ const AgGridModel = widgets.DOMWidgetModel.extend(
 
                 _id: 0,
 
+                scroll: [0, 0],
+
                 width: '',
                 height: '',
 
@@ -109,10 +111,25 @@ const AgGridView = widgets.DOMWidgetView.extend({
         document.head.appendChild(style);
         const { sheet } = style;
 
-        // Add custom CSS
+        // Add custom CSS on init
         this.model.get('css_rules_down').forEach(rule => {
             sheet.insertRule(`#widget-grid-${this._id} ${rule}`, 0);
         }); // Empty if Python css_rules not set
+
+        // Listen to changes on css_rules
+        this.model.on('change:css_rules_down', () => {
+            // remove all previous css rules
+            var i = sheet.rules.length
+            while (i--) {
+                if (sheet.rules[i].selectorText.startsWith(`#widget-grid-${this._id}`)) {
+                    sheet.removeRule(i);
+                }
+            }
+            // Add custom CSS
+            this.model.get('css_rules_down').forEach(rule => {
+                sheet.insertRule(`#widget-grid-${this._id} ${rule}`, 0);
+            }); // Empty if Python css_rules not set
+        });
 
         // Get data
         const gridData = this.model.get('_grid_data_down');

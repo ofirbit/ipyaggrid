@@ -86,6 +86,7 @@ const setupInputs = (view, menu, sheet, gridOptions, dropdownMulti) => {
         // Setup Quickfilter
         if (input.name === 'Quick Filter') {
             setupQuickFilter(view, menu, sheet, input);
+            setupResetFiltersButton(view, menu, sheet, input);
         }
 
         // Setup Toggle Edit
@@ -208,7 +209,7 @@ const setupQuickFilter = (view, menu, sheet, input) => {
     const quickFilter = document.createElement('input');
     quickFilter.id = `quick-filter-${view._id}`;
     quickFilter.type = 'text';
-    quickFilter.placeholder = 'Filter...';
+    quickFilter.placeholder = 'Global Filter...';
     quickFilter.className = `widget-text flex-child-${input.name
         .toLowerCase()
         .replace(/\s/g, '-')}-${view._id}`;
@@ -222,6 +223,34 @@ const setupQuickFilter = (view, menu, sheet, input) => {
     };
     quickFilter.oninput = onQuickfilterTextBoxChanged;
     sheet.insertRule(input.css, sheet.cssRules.length);
+};
+
+/**
+ * Creates the reset filter button input
+ * and setups the action on the grid.
+ * @param {WidgetView} view
+ * @param {Object} menu
+ * @param {StyleSheet} sheet
+ * @param {Object} input
+ */
+const setupResetFiltersButton = (view, menu, sheet, input) => {
+    const resetFiltersButton = document.createElement('button');
+    resetFiltersButton.id = `reset-filters-${view._id}`;
+    resetFiltersButton.innerText = 'Reset Filters';
+    resetFiltersButton.className = `jupyter-button flex-child-${input.name
+        .toLowerCase()
+        .replace(/\s/g, '-')}-${view._id}`;
+
+    menu.inputDivs.push(resetFiltersButton);
+
+    const onResetFiltersClick = () => {
+        view.gridOptions.api.setFilterModel(null);
+        view.gridOptions.api.onFilterChanged();
+        view.gridOptions.api.setQuickFilter('');
+        document.getElementById(`quick-filter-${view._id}`).value = '';
+    };
+    resetFiltersButton.onclick = onResetFiltersClick;
+    menu.buttonDivs.push(resetFiltersButton);
 };
 
 /**
