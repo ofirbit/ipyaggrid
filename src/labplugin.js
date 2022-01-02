@@ -1,7 +1,6 @@
 import * as base from '@jupyter-widgets/base';
-
-import * as myWidget from './widget';
 import { version } from './index';
+import * as myWidget from './widget';
 
 const id = 'ipyaggrid';
 const requires = [base.IJupyterWidgetRegistry];
