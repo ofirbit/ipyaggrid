@@ -9,6 +9,11 @@ import { JSONfunc } from './widget_json';
 
 // make available to helpers and js eval-ed
 const d3 = moduled3;
+/**
+ * WARNING - DO NO REMOVE, it prevent from d3 to be GCed
+ */
+console.log('d3 loaded');
+console.log(d3);
 
 /**
  * Builds the grid according to the options and data,

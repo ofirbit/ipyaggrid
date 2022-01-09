@@ -5,7 +5,11 @@ import * as exportFunctions from './widget_export';
 // make available to js eval-ed
 const { exportFunc } = exportFunctions;
 const d3 = moduled3;
-
+/**
+ * WARNING - DO NO REMOVE, it prevent from d3 to be GCed
+ */
+console.log('d3 loaded');
+console.log(d3);
 window.d3 = d3;
 /**
  * Builds Attach the button names and their actions to real buttons.
