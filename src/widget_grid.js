@@ -154,6 +154,16 @@ const AgGridView = widgets.DOMWidgetView.extend({
         }
         console.log('end ipyaggrid render');
     },
+    processPhosphorMessage(msg) {
+        switch (msg.type) {
+            case 'resize':
+            case 'after-show':
+                if (this.gridOptions && this.model.get('columns_fit') === 'size_to_fit'){
+                    this.gridOptions.api.sizeColumnsToFit();
+                }
+            break;
+        }
+    }
 });
 
 export { AgGridModel, AgGridView };
